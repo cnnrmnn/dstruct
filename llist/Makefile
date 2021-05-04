@@ -1,10 +1,10 @@
 CC=gcc
 CFLAGS=-g -pedantic -Wall
 
-all: quack 
+all: quack bin
 
 quack: quack.o stack.o queue.o llist.o
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o ./bin/$@ $^
 
 quack.o: quack.c stack.h
 
@@ -14,5 +14,8 @@ queue.o: queue.c queue.h llist.h
 
 llist.o: llist.c llist.h
 
+bin:
+	mkdir bin
+
 clean:
-	$(RM) quack *.o
+	rm -rf bin *.o
