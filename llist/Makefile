@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-g -pedantic -Wall
 
-all: quack bin
+all: bin quack
 
 quack: quack.o stack.o queue.o llist.o
 	$(CC) $(CFLAGS) -o ./bin/$@ $^
