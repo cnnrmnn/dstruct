@@ -15,11 +15,11 @@ int ll_empty(const LinkedList *ll);
 /* Returns the next node in the linked list */
 LinkedList ll_next(const LinkedList *ll);
 
-/* Returns the value of the head node of the linked list */
+/* Returns the value of the current node in the linked list */
 int ll_val(const LinkedList *ll);
 
-/* Sets the next node of the linked list to the given linked list */
+/* Sets the next node in the linked list */
 void ll_set_next(LinkedList *ll, LinkedList next);
 
-/* Sets the value of the head node of the linked list to the given value */
+/* Sets the value of the current node in the linked list */
 void ll_set_val(LinkedList *ll, int val);
