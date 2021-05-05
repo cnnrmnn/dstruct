@@ -22,36 +22,20 @@ void q_free(Queue q) {
 }
 
 int q_dequeue(Queue *q) {
-    LinkedList head, new_head;
     int ret;
 
-    head = (*q)->head;
-    new_head = ll_next(&head);
-    ret = ll_val(&head);
-
-    (*q)->head = new_head;
-    ll_free(head);
-
-    if (ll_empty(&new_head))
-        (*q)->tail = new_head;
+    ret = ll_remove(&(*q)->head);
+    if (ll_empty(&(*q)->head))
+        (*q)->tail = (*q)->head;
 
     return ret;
 }
 
 void q_enqueue(Queue *q, int val) {
-    LinkedList tail, new_tail;
-    
-    tail = (*q)->tail;
-    new_tail = ll_alloc();
-    ll_set_val(&new_tail, val); 
+    ll_insert_after(&(*q)->tail, val);
 
-    if (ll_empty(&tail)) {
-        (*q)->head = new_tail;
-    } else {
-        ll_set_next(&tail, new_tail);
-    }
- 
-    (*q)->tail = new_tail;
+    if (ll_empty(&(*q)->head))
+        (*q)->head =  (*q)->tail;
 }
 
 int q_empty(const Queue *q) {

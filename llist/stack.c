@@ -21,29 +21,11 @@ void s_free(Stack s) {
 }
 
 int s_pop(Stack *s) {
-    LinkedList head, new_head;
-    int ret;
-    
-    head = (*s)->head;
-    new_head = ll_next(&head);
-    ret = ll_val(&head);
-    
-    (*s)->head = new_head;
-    ll_free(head);
-
-    return ret;
+    return ll_remove(&(*s)->head);
 }
 
 void s_push(Stack *s, int val) {
-    LinkedList head, new_head;
-
-    head = (*s)->head;
-
-    new_head = ll_alloc();
-    ll_set_val(&new_head, val);
-    ll_set_next(&new_head, head);
-
-    (*s)->head = new_head;
+    ll_insert_before(&(*s)->head, val);
 }
 
 int s_empty(const Stack *s) {

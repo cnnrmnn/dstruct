@@ -6,20 +6,23 @@ extern const LinkedList EMPTY_LL;
 /* Allocates and returns a linked list */
 LinkedList ll_alloc();
 
-/* Frees the given linked list */
+/* Frees the linked list */
 void ll_free(LinkedList ll);
 
-/* Returns true if the given linked list is empty */
+/* Returns true if the linked list is empty */
 int ll_empty(const LinkedList *ll);
 
-/* Returns the next node in the linked list */
+/* Returns the next node */
 LinkedList ll_next(const LinkedList *ll);
 
-/* Returns the value of the current node in the linked list */
+/* Returns the value of the head node */
 int ll_val(const LinkedList *ll);
 
-/* Sets the next node in the linked list */
-void ll_set_next(LinkedList *ll, LinkedList next);
+/* Inserts a new node before the head node */
+void ll_insert_before(LinkedList *ll, int val);
 
-/* Sets the value of the current node in the linked list */
-void ll_set_val(LinkedList *ll, int val);
+/* Inserts a new node after the head node */
+void ll_insert_after(LinkedList *ll, int val);
+
+/* Removes the head node and returns its value */
+int ll_remove(LinkedList *ll);
