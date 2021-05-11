@@ -3,16 +3,14 @@
 #include "deque.h"
 
 struct deque {
-    DoublyLinkedList head;
-    DoublyLinkedList tail;
+    DoublyLinkedList dll;
 };
 
 Deque d_alloc() {
     Deque d;
 
     d = malloc(sizeof(struct deque));
-    d->head = EMPTY_DLL;
-    d->tail = EMPTY_DLL;
+    d->dll = dll_alloc();
 
     return d;
 }
@@ -22,39 +20,21 @@ void d_free(Deque d) {
 }
 
 int d_pop_head(Deque *d) {
-    int ret;
-
-    ret = dll_remove(&(*d)->head);
-    if (dll_empty(&(*d)->head))
-        (*d)->tail = (*d)->head;
-
-    return ret;
+    return dll_remove_after(&(*d)->dll);
 }
 
 int d_pop_tail(Deque *d) {
-    int ret;
-
-    ret = dll_remove(&(*d)->tail);
-    if (dll_empty(&(*d)->tail))
-        (*d)->head = (*d)->tail;
-
-    return ret;
+    return dll_remove_before(&(*d)->dll);
 }
 
 void d_push_head(Deque *d, int val) {
-    dll_insert_before(&(*d)->head, val);
-
-    if (dll_empty(&(*d)->tail))
-        (*d)->tail = (*d)->head;
+    dll_insert_after(&(*d)->dll, val);
 }
 
 void d_push_tail(Deque *d, int val) {
-    dll_insert_after(&(*d)->tail, val);
-
-    if (dll_empty(&(*d)->head))
-        (*d)->head= (*d)->tail;
+    dll_insert_before(&(*d)->dll, val);
 }
 
 int d_empty(const Deque *d) {
-    return dll_empty(&(*d)->head) && dll_empty(&(*d)->tail);
+    return dll_empty(&(*d)->dll);
 }

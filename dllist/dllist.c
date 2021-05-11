@@ -14,8 +14,7 @@ DoublyLinkedList dll_alloc() {
     DoublyLinkedList dll;
 
     dll = malloc(sizeof(struct node));
-    dll->prev = EMPTY_DLL;
-    dll->next = EMPTY_DLL;
+    dll->prev = dll->next = dll;
 
     return dll;
 }
@@ -25,7 +24,7 @@ void dll_free(DoublyLinkedList dll) {
 }
 
 int dll_empty(const DoublyLinkedList *dll) {
-   return *dll == EMPTY_DLL; 
+    return (*dll)->next == *dll;
 }
 
 DoublyLinkedList dll_prev(const DoublyLinkedList *dll) {
@@ -46,14 +45,10 @@ void dll_insert_before(DoublyLinkedList *dll, int val) {
     new_node = dll_alloc();
     new_node->val = val;
     new_node->next = *dll;
+    new_node->prev = (*dll)->prev;
+    new_node->prev->next = new_node;
 
-    if (!dll_empty(dll)) {
-        if (!dll_empty(&(*dll)->prev))
-            new_node->prev = (*dll)->prev;
-        (*dll)->prev = new_node;
-    }
-
-    *dll = new_node;
+    (*dll)->prev = new_node;
 }
 
 void dll_insert_after(DoublyLinkedList *dll, int val) {
@@ -62,37 +57,39 @@ void dll_insert_after(DoublyLinkedList *dll, int val) {
     new_node = dll_alloc();
     new_node->val = val;
     new_node->prev = *dll;
+    new_node->next = (*dll)->next;
+    new_node->next->prev = new_node;
 
-    if (!dll_empty(dll)) {
-        if (!dll_empty(&(*dll)->next))
-            new_node->next = (*dll)->next;
-        (*dll)->next = new_node;
-    }
-
-    *dll = new_node;
+    (*dll)->next = new_node;
 }
 
-int dll_remove(DoublyLinkedList *dll) {
-    DoublyLinkedList head;
+
+int dll_remove_before(DoublyLinkedList *dll) {
+    DoublyLinkedList prev;
     int ret;
 
-    head = *dll;
-    ret = head->val;
+    prev = (*dll)->prev;
 
-    if (!dll_empty(&head->next)) {
-        head->next->prev = head->prev;
-    }
-    if (!dll_empty(&head->prev)) {
-        head->prev->next = head->next;
-    }
+    ret = prev->val;
+    prev->next->prev = prev->prev;
+    prev->prev->next = prev->next;
 
-    if (dll_empty(&head->next) && !dll_empty(&head->prev)) {
-        *dll = head->prev;
-    } else {
-        *dll = head->next;
-    }
+    dll_free(prev);
 
-    dll_free(head);
+    return ret;
+}
+
+int dll_remove_after(DoublyLinkedList *dll) {
+    DoublyLinkedList next;
+    int ret;
+
+    next = (*dll)->next;
+
+    ret = next->val;
+    next->next->prev = next->prev;
+    next->prev->next = next->next;
+
+    dll_free(next);
 
     return ret;
 }

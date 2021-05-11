@@ -27,5 +27,8 @@ void dll_insert_before(DoublyLinkedList *dll, int val);
 /* Inserts a new node after the head node */
 void dll_insert_after(DoublyLinkedList *dll, int val);
 
+/* Removes the tail node and returns its value */
+int dll_remove_before(DoublyLinkedList *dll);
+
 /* Removes the head node and returns its value */
-int dll_remove(DoublyLinkedList *dll);
+int dll_remove_after(DoublyLinkedList *dll);
