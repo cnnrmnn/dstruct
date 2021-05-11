@@ -2,19 +2,19 @@
 #include <stddef.h>
 #include "dllist.h" 
 
+#define DIR_PREV (0)
+#define DIR_NEXT (1)
+
 struct node {
-    struct node *prev;
-    struct node *next;
+    struct node *next[2];
     int val;
 };
-
-const DoublyLinkedList EMPTY_DLL = NULL;
 
 DoublyLinkedList dll_alloc() {
     DoublyLinkedList dll;
 
     dll = malloc(sizeof(struct node));
-    dll->prev = dll->next = dll;
+    dll->next[DIR_PREV] = dll->next[DIR_NEXT] = dll;
 
     return dll;
 }
@@ -24,72 +24,60 @@ void dll_free(DoublyLinkedList dll) {
 }
 
 int dll_empty(const DoublyLinkedList *dll) {
-    return (*dll)->next == *dll;
+    return (*dll)->next[DIR_PREV] == *dll;
 }
 
 DoublyLinkedList dll_prev(const DoublyLinkedList *dll) {
-    return (*dll)->prev;
+    return (*dll)->next[DIR_PREV];
 }
 
 DoublyLinkedList dll_next(const DoublyLinkedList *dll) {
-    return (*dll)->next;
+    return (*dll)->next[DIR_NEXT];
 }
 
 int dll_val(const DoublyLinkedList *dll) {
     return (*dll)->val;
 }
 
-void dll_insert_before(DoublyLinkedList *dll, int val) {
+static void dll_insert(DoublyLinkedList *dll, int val, int dir) {
     DoublyLinkedList new_node;
 
     new_node = dll_alloc();
     new_node->val = val;
-    new_node->next = *dll;
-    new_node->prev = (*dll)->prev;
-    new_node->prev->next = new_node;
+    new_node->next[!dir] = *dll;
+    new_node->next[dir]= (*dll)->next[dir];
+    new_node->next[dir]->next[!dir] = new_node;
 
-    (*dll)->prev = new_node;
+    (*dll)->next[dir] = new_node;
+}
+
+void dll_insert_before(DoublyLinkedList *dll, int val) {
+    dll_insert(dll, val, DIR_PREV);
 }
 
 void dll_insert_after(DoublyLinkedList *dll, int val) {
-    DoublyLinkedList new_node;
-
-    new_node = dll_alloc();
-    new_node->val = val;
-    new_node->prev = *dll;
-    new_node->next = (*dll)->next;
-    new_node->next->prev = new_node;
-
-    (*dll)->next = new_node;
+    dll_insert(dll, val, DIR_NEXT);
 }
 
-
-int dll_remove_before(DoublyLinkedList *dll) {
-    DoublyLinkedList prev;
+static int dll_remove(DoublyLinkedList *dll, int dir) {
+    DoublyLinkedList rem;
     int ret;
 
-    prev = (*dll)->prev;
+    rem = (*dll)->next[dir];
 
-    ret = prev->val;
-    prev->next->prev = prev->prev;
-    prev->prev->next = prev->next;
+    ret = rem->val;
+    rem->next[!dir]->next[dir] = rem->next[dir];
+    rem->next[dir]->next[!dir] = rem->next[!dir];
 
-    dll_free(prev);
+    dll_free(rem);
 
     return ret;
+}
+
+int dll_remove_before(DoublyLinkedList *dll) {
+    return dll_remove(dll, DIR_PREV);
 }
 
 int dll_remove_after(DoublyLinkedList *dll) {
-    DoublyLinkedList next;
-    int ret;
-
-    next = (*dll)->next;
-
-    ret = next->val;
-    next->next->prev = next->prev;
-    next->prev->next = next->next;
-
-    dll_free(next);
-
-    return ret;
+    return dll_remove(dll, DIR_NEXT);
 }

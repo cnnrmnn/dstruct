@@ -1,8 +1,5 @@
 typedef struct node *DoublyLinkedList;
 
-/* The empty doubly-linked list */
-extern const DoublyLinkedList EMPTY_DLL;
-
 /* Allocates and returns a doubly-linked list */
 DoublyLinkedList dll_alloc();
 
