@@ -16,6 +16,7 @@ Deque d_alloc() {
 }
 
 void d_free(Deque d) {
+    free(d->dll);
     free(d);
 }
 
